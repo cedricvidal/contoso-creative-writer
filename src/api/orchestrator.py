@@ -87,6 +87,7 @@ def create(research_context, product_context, assignment_context, evaluate=True)
     for item in writer_result:
         full_result = full_result + f'{item}'
         yield complete_message("partial", {"text": item})
+    yield complete_message("writer", {"complete": True, "characters": len(full_result)})
 
     processed_writer_result = writer.process(full_result)
 
@@ -95,7 +96,6 @@ def create(research_context, product_context, assignment_context, evaluate=True)
     editor_response = editor.edit(processed_writer_result['article'], processed_writer_result["feedback"])
 
     yield complete_message("editor", editor_response)
-    yield complete_message("writer", {"complete": True})
 
     retry_count = 0
     while(str(editor_response["decision"]).lower().startswith("accept")):
@@ -116,6 +116,7 @@ def create(research_context, product_context, assignment_context, evaluate=True)
         for item in writer_result:
             full_result = full_result + f'{item}'
             yield complete_message("partial", {"text": item})
+        yield complete_message("writer", {"complete": True, "characters": len(full_result)})
 
         processed_writer_result = writer.process(full_result)
 
@@ -128,7 +129,6 @@ def create(research_context, product_context, assignment_context, evaluate=True)
             break
 
         yield complete_message("editor", editor_response)
-        yield complete_message("writer", {"complete": True})
 
     #these need to be yielded for calling evals from evaluate.evaluate
     yield send_research(research_result)
@@ -152,16 +152,20 @@ def test_create_article(research_context, product_context, assignment_context):
         parsed_result = json.loads(result)
         if type(parsed_result) is dict:
             if parsed_result['type'] == 'researcher':
-                print(parsed_result['data'])
+                print(f"[{parsed_result['type'].upper()}] message - {parsed_result['message']}: {parsed_result['data']}\n")
             if parsed_result['type'] == 'marketing':
-                print(parsed_result['data'])
+                print(f"[{parsed_result['type'].upper()}] message - {parsed_result['message']}: {parsed_result['data']}\n")
             if parsed_result['type'] == 'editor':
-                print(parsed_result['data'])
-        if type(parsed_result) is list:
-            if parsed_result[0] == "writer":
-                article = parsed_result[1]
-                print(f'Article: {article}')
-    
+                print(f"[{parsed_result['type'].upper()}] message - {parsed_result['message']}: {parsed_result['data']}\n")
+            if parsed_result['type'] == 'writer' and 'start' in parsed_result['data'] and parsed_result['data']['start']:
+                print(f"[{parsed_result['type'].upper()}] Start writing ...\n")
+            if parsed_result['type'] == 'writer' and 'complete' in parsed_result['data'] and parsed_result['data']['complete']:
+                print(f"\n\n[{parsed_result['type'].upper()}] Finished writing ({parsed_result['data']['characters']} characters)\n")
+            if parsed_result['type'] == 'message':
+                print(f"[MESSAGE] {parsed_result['message']}\n")
+            if parsed_result['type'] == 'partial':
+                print(parsed_result['data']['text'], end="")
+
 if __name__ == "__main__":
 
     from tracing import init_tracing
