@@ -32,4 +32,4 @@ deployments:
       version: "0613"
     sku:
       name: "Standard"
-      capacity: 10
+      capacity: 8
