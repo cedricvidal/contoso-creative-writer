@@ -89,8 +89,10 @@ def find_products(context: str) -> Dict[str, any]:
     # Get product queries
     queries = prompty.execute("product.prompty", inputs={"context":context})
     qs = json.loads(queries)
+
     # Generate embeddings
     items = generate_embeddings(qs)
+
     # Retrieve products
     products = retrieve_products(items, "contoso-products")
     return products

@@ -80,21 +80,31 @@ def find_news(query, market="en-US"):
 @trace
 def execute(instructions: str, feedback: str = "No feedback"):
     """Assign a research task to a researcher"""
+
+    # Map the function names to the actual functions implementing them
     functions = {
         "find_information": find_information,
         "find_entities": find_entities,
         "find_news": find_news,
     }
 
+    # Execute the research prompty
     fns: List[ToolCall] = prompty.execute(
         "researcher.prompty", inputs={"instructions": instructions, "feedback": feedback}
     )
 
     research = []
     for f in fns:
+        # Resolve which function to call
         fn = functions[f.name]
+
+        # Parse the argument JSON values
         args = json.loads(f.arguments)
+
+        # Call the function
         r = fn(**args)
+
+        # Append the result to the research list
         research.append(
             {"id": f.id, "function": f.name, "arguments": args, "result": r}
         )
