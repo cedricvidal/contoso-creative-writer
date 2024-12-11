@@ -122,7 +122,11 @@ def process(research):
     # process entity searches
     entities = filter(lambda r: r["function"] == "find_entities", research)
     entity_items = [
-        {"url": "None Available", "name": it["name"], "description": it["description"]}
+        {
+            "url": "None Available", 
+            "name": it["name"], 
+            "description": it["description"]
+        }
         for e in entities
         for it in e["result"]
     ]
