@@ -20,7 +20,7 @@ hooks:
       shell: sh
       continueOnError: false
       interactive: true
-      run: 'azr solve -d infra/ai.yaml --non-interactive -f'
+      run: 'azr solve -d infra/ai.yaml --non-interactive -f -c $(azd env get-value AZURE_LOCATION)'
   postprovision:
     posix:
       shell: sh
