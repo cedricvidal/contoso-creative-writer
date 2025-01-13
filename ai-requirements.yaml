@@ -1,0 +1,52 @@
+requirements:
+- model:
+    formats:
+    - OpenAI
+    kinds:
+    - OpenAI
+    names:
+    - text-embedding-ada-002
+    - text-embedding-3-small
+  name: text-embedding-ada-002
+  sku:
+    capacity:
+      ideal: 100
+      min: 50
+    names:
+    - DataZoneStandard
+    - GlobalStandard
+    - Standard
+- model:
+    formats:
+    - OpenAI
+    kinds:
+    - OpenAI
+    names:
+    - gpt-4o
+    - gpt-4o-mini
+  name: gpt-4
+  sku:
+    capacity:
+      ideal: 20
+      min: 5
+    names:
+    - DataZoneStandard
+    - GlobalStandard
+    - Standard
+- model:
+    formats:
+    - OpenAI
+    kinds:
+    - OpenAI
+    names:
+    - gpt-4-32k
+    - gpt-4
+  name: gpt-4-evals
+  sku:
+    capacity:
+      ideal: 20
+      min: 5
+    names:
+    - DataZoneStandard
+    - GlobalStandard
+    - Standard
