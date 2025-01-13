@@ -15,6 +15,12 @@ services:
     docker:
       remoteBuild: true
 hooks:
+  preprovision:
+    posix:
+      shell: sh
+      continueOnError: false
+      interactive: true
+      run: 'azr solve -d infra/ai.yaml --non-interactive -f'
   postprovision:
     posix:
       shell: sh
